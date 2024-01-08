@@ -7,6 +7,7 @@
 #
 readonly DIETPI_GREEN='\e[38;5;154m'
 readonly BOLD_WHITE='\e[1m'
+readonly DIETPI_GREY='\e[90m'
 readonly RESET='\e[0m'
 
 sdCardValue=$(echo -e " ${DIETPI_GREEN}-${RESET} ${BOLD_WHITE}SD Card usage${RESET} ${DIETPI_GREEN}:${RESET} $(df -h --output=used,size,pcent / | mawk 'NR==2 {printf $1" / "$2" ("$3"%)"}' 2>&1)")
@@ -20,7 +21,11 @@ while IFS= read -r line; do
         transformedLine="$line"
 
         if [[ "$transformedLine" == *"CPU temp"* ]]; then
-                transformedLine="${transformedLine}\n${ramValue} (${ramPercentage}%)\n${sdCardValue}\n${diskValue}"
+                IFS='//' read -ra celsius <<< "$transformedLine"
+                IFS=':' read -ra message <<< "${celsius[1]}"
+                tempValue="${celsius[0]}${DIETPI_GREY}:${message[1]}${RESET}"
+
+                transformedLine="${tempValue}\n${ramValue} (${ramPercentage}%)\n${sdCardValue}\n${diskValue}"
         fi
 
         output="${output}${transformedLine}\n"
