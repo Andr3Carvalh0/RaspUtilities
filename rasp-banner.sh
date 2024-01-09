@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created by Andre Carvalho on 5th January 2024
-# Last modified: 8th January 2024
+# Last modified: 9th January 2024
 #
 # Custom banner for a DietPi installation
 #
@@ -12,7 +12,7 @@ readonly RESET='\e[0m'
 
 sdCardValue=$(echo -e " ${DIETPI_GREEN}-${RESET} ${BOLD_WHITE}SD Card usage${RESET} ${DIETPI_GREEN}:${RESET} $(df -h --output=used,size,pcent / | mawk 'NR==2 {printf $1" / "$2" ("$3"%)"}' 2>&1)")
 diskValue=$(echo -e " ${DIETPI_GREEN}-${RESET} ${BOLD_WHITE}Hard drive(s) usage${RESET} ${DIETPI_GREEN}:${RESET} $(df -h -x aufs -x tmpfs -x overlay -x drvfs -x devtmpfs  --total | grep "total" | mawk '{printf $3" / "$2" ("$5"%)"}' 2>&1)")
-ramValue=$(echo -e " ${DIETPI_GREEN}-${RESET} ${BOLD_WHITE}RAM usage${RESET} ${DIETPI_GREEN}:${RESET} $(free -h | mawk 'NR==2 {printf $3" / "$2}' 2>&1)")
+ramValue=$(echo -e " ${DIETPI_GREEN}-${RESET} ${BOLD_WHITE}RAM usage${RESET} ${DIETPI_GREEN}:${RESET} $(free -h --si | mawk 'NR==2 {printf $3" / "$2}' 2>&1)")
 ramPercentage="$(free -b | mawk 'NR==2 {printf "%.0f", 100*$3/$2}' 2>&1)"
 
 output=""
